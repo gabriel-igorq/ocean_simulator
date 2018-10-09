@@ -11,13 +11,13 @@ public class Ocean
     // The depth and width of the field.
     private int height, width;
     // Storage for the animals.
-    private Object[][] field;
+    private Fish[][] field;
     
     
     public Ocean(int height, int width){
     	this.height = height;
         this.width = width;
-        field = new Object[height][width];
+        field = new Fish[height][width];
     }
     
     public void clear(){
@@ -31,16 +31,16 @@ public class Ocean
         field[location.getRow()][location.getCol()] = null;
     }
     
-    public void place(Object animal, int row, int col){
-        place(animal, new Location(row, col));
+    public void place(Fish fish, int row, int col){
+        place(fish, new Location(row, col));
     }
-    public void place(Object animal, Location location){
-        field[location.getRow()][location.getCol()] = animal;
+    public void place(Fish fish, Location location){
+        field[location.getRow()][location.getCol()] = fish;
     }
-    public Object getObjectAt(Location location){
-        return getObjectAt(location.getRow(), location.getCol());
+    public Fish getFishAt(Location location){
+        return getFishAt(location.getRow(), location.getCol());
     }
-    public Object getObjectAt(int row, int col){
+    public Fish getFishAt(int row, int col){
         return field[row][col];
     }
     public int getHeight(){
@@ -51,7 +51,7 @@ public class Ocean
         List<Location> free = new LinkedList<Location>();
         List<Location> adjacent = adjacentLocations(location);
         for(Location next : adjacent) {
-            if(getObjectAt(next) == null) {
+            if(getFishAt(next) == null) {
                 free.add(next);
             }
         }

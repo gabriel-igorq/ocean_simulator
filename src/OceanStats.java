@@ -12,7 +12,7 @@ import java.util.HashMap;
 public class OceanStats
 {
     // Counters for each type of entity (shark, herring, etc.) in the simulation.
-    private HashMap<Class<? extends Object>,Counter> counters;
+    private HashMap<Class<? extends Fish>,Counter> counters;
     // Whether the counters are currently up to date.
     private boolean countsValid;
 
@@ -23,7 +23,7 @@ public class OceanStats
     {
         // Set up a collection for counters for each type of fish that
         // we might find
-        counters = new HashMap<Class<? extends Object>,Counter>();
+        counters = new HashMap<Class<? extends Fish>,Counter>();
         countsValid = true;
     }
 
@@ -45,7 +45,7 @@ public class OceanStats
             buffer.append(' ');
         }
         */
-        for(Class<? extends Object> key : counters.keySet()) {
+        for(Class<? extends Fish> key : counters.keySet()) {
             Counter info = counters.get(key);
             buffer.append(info.getName());
             buffer.append(": ");
@@ -62,7 +62,7 @@ public class OceanStats
     public void reset()
     {
         countsValid = false;
-        for(Class<? extends Object> key : counters.keySet()) {
+        for(Class<? extends Fish> key : counters.keySet()) {
             Counter cnt = counters.get(key);
             cnt.reset();
         }
@@ -71,7 +71,7 @@ public class OceanStats
     /**
      * Increment the count for one class of fish.
      */
-    public void incrementCount(Class<? extends Object> fishClass)
+    public void incrementCount(Class<? extends Fish> fishClass)
     {
         Counter cnt = counters.get(fishClass);
         if(cnt == null) {
@@ -102,7 +102,7 @@ public class OceanStats
         if(!countsValid) {
             generateCounts(ocean);
         }
-        for(Class<? extends Object> key : counters.keySet()) {
+        for(Class<? extends Fish> key : counters.keySet()) {
             Counter info = counters.get(key);
             if(info.getCount() > 0) {
                 nonZero++;
@@ -121,7 +121,7 @@ public class OceanStats
         reset();
         for(int row = 0; row < ocean.getHeight(); row++) {
             for(int col = 0; col < ocean.getWidth(); col++) {
-                Object fish = ocean.getObjectAt(row, col);
+                Fish fish = ocean.getFishAt(row, col);
                 if(fish != null) {
                     incrementCount(fish.getClass());
                 }
