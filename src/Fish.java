@@ -78,5 +78,4 @@ public abstract class Fish{
         location = newLocation;
         field.place(this, newLocation);
     }
-    
 }
