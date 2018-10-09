@@ -47,6 +47,26 @@ public class Ocean
         // put something here
         return height;
     }
+    public List<Location> getFreeAdjacentLocations(Location location){
+        List<Location> free = new LinkedList<Location>();
+        List<Location> adjacent = adjacentLocations(location);
+        for(Location next : adjacent) {
+            if(getObjectAt(next) == null) {
+                free.add(next);
+            }
+        }
+        return free;
+    }
+    public Location freeAdjacentLocation(Location location){
+        // The available free ones.
+        List<Location> free = getFreeAdjacentLocations(location);
+        if(free.size() > 0) {
+            return free.get(0);
+        }
+        else {
+            return null;
+        }
+    }
     /**
      * Return a shuffled list of locations adjacent to the given one.
      * The list will not include the location itself.
