@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -13,11 +14,14 @@ public class Simulator
     private int step;
     private SimulatorView simView;
     private List<Sardine> sardines;
-    private static final double SARDINE_CREATION_PROBABILITY = 0.08;    
+    private List<Tuna> tunas;
+    private double rands;
+    private static final double SARDINE_CREATION_PROBABILITY = 0.07;    
+    private static final double TUNAS_CREATION_PROBABILITY = 0.05; 
     public static void main(String[] args) 
     {
         Simulator sim = new Simulator(50, 100);
-        sim.run(100);
+        sim.simulate(100);
     }
     
     
@@ -25,18 +29,71 @@ public class Simulator
     public Simulator(int height, int width)
     {
     	sardines = new ArrayList<Sardine>();
+    	tunas = new ArrayList<Tuna>();
         ocean = new Ocean(height, width);
         simView = new SimulatorView(height, width);
        
         
         // define in which color fish should be shown
         simView.setColor(Sardine.class, Color.red);
+        simView.setColor(Tuna.class, Color.blue);
         reset();
+    }
+    public void simulateOneStep()
+    {
+        step++;
+
+        // Provide space for newborn sardines.
+        List<Fish> newSardines = new ArrayList<Fish>(); 
+        
+        // Let all sardines act.
+        for(Iterator<Sardine> it = sardines.iterator(); it.hasNext(); ) {
+            Sardine sardine = it.next();
+            sardine.act(newSardines);
+            if(! sardine.isAlive()) {
+                it.remove();
+            }
+            
+        }
+        for(Iterator<Sardine> it = sardines.iterator(); it.hasNext(); ) {
+            Sardine sardine = it.next();
+            sardines.add(sardine);
+            
+        }
+        
+        
+        // Provide space for newborn tunas.
+        List<Fish> newTunas = new ArrayList<Fish>();        
+        // Let all tunas act.
+        for(Iterator<Tuna> it = tunas.iterator(); it.hasNext(); ) {
+            Tuna tuna = it.next();
+            tuna.act(newTunas);
+            if(! tuna.isAlive()) {
+                it.remove();
+            }
+        }
+        for(Iterator<Tuna> it = tunas.iterator(); it.hasNext(); ) {
+            Tuna tuna = it.next();
+            tunas.add(tuna);
+        }
+        
+        // Add the newly born foxes and rabbits to the main lists.
+       // sardines.addAll( newRabbits);
+       // tunas.addAll( newFoxes);
+
+        simView.showStatus(step, ocean);
+    }
+    public void simulate(int numSteps)
+    {
+        for(int step = 1; step <= numSteps && simView.isViable(ocean); step++) {
+            simulateOneStep();
+        }
     }
     public void reset()
     {
         step = 0;
         sardines.clear();
+        tunas.clear();
 //        foxes.clear();
         populate();
         
@@ -49,16 +106,22 @@ public class Simulator
         ocean.clear();
         for(int row = 0; row < ocean.getHeight(); row++) {
             for(int col = 0; col < ocean.getWidth(); col++) {
+            	rands = rand.nextDouble();
                 /*if(rand.nextDouble() <= FOX_CREATION_PROBABILITY) {
                     Location location = new Location(row, col);
                     Fox fox = new Fox(true, ocean, location);
                     foxes.add(fox);
                 }*/
-                 if(rand.nextDouble() <= SARDINE_CREATION_PROBABILITY) {
+                 if(rands <= SARDINE_CREATION_PROBABILITY && rands >= TUNAS_CREATION_PROBABILITY) {
                     Location location = new Location(row, col);
                     Sardine sardine = new Sardine(true, ocean, location);
                     sardines.add(sardine);
                 }
+                 else if(rands <= TUNAS_CREATION_PROBABILITY && rands >=0.03 ) {
+                     Location location = new Location(row, col);
+                     Tuna tuna = new Tuna(true, ocean, location);
+                     tunas.add(tuna);
+                 }
                 // else leave the location empty.
             }
         }

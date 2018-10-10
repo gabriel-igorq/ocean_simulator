@@ -66,7 +66,9 @@ public abstract class Fish{
     public Ocean getField(){
         return field;
     }
-    
+    public void setField(Ocean field){
+        this.field=field;
+    }
     /**
      * Place the animal at the new location in the given field.
      * @param newLocation The animal's new location.
