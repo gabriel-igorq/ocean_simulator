@@ -16,29 +16,29 @@ public class Shark extends Fish
     
     // The age at which a shark can start to breed.
     private static final int BREEDING_AGE = 10;
-    // The age to which a fox can live.
+    // The age to which a shark can live.
     private static final int MAX_AGE = 100;
-    // The likelihood of a fox breeding.
+    // The likelihood of a shark breeding.
     private static final double BREEDING_PROBABILITY = 0.35;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 5;
-    // The food value of a single rabbit. In effect, this is the
+    // The food value of a single tuna. In effect, this is the
     // number of steps a shark can go before it has to eat again.
     private static final int RABBIT_FOOD_VALUE = 3;
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
     
     // Individual characteristics (instance fields).
-    // The fox's age.
+    // The shark's age.
     private int age;
-    // The fox's food level, which is increased by eating rabbits.
+    // The shark's food level, which is increased by eating rabbits.
     private int foodLevel;
 
     /**
-     * Create a fox. A fox can be created as a new born (age zero
+     * Create a shark. A shark can be created as a new born (age zero
      * and not hungry) or with a random age and food level.
      * 
-     * @param randomAge If true, the fox will have random age and hunger level.
+     * @param randomAge If true, the shark will have random age and hunger level.
      * @param field The field currently occupied.
      * @param location The location within the field.
      */
@@ -60,7 +60,7 @@ public class Shark extends Fish
      * food. In the process, it might breed, die of hunger,
      * or die of old age.
      * @param field The field currently occupied.
-     * @param newSharks A list to add newly born foxes to.
+     * @param newSharks A list to add newly born sharks to.
      */
     public void act(List<Fish> newSharks)
     {
@@ -110,7 +110,7 @@ public class Shark extends Fish
     
     /**
      * Tell the sharks to look for tunas adjacent to its current location.
-     * Only the first live tuna is eaten.
+     * Only the first live tuna or sardine is eaten.
      * @param location Where in the field it is located.
      * @return Where food was found, or null if it wasn't.
      */

@@ -2,7 +2,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * A simple model of a rabbit.
+ * A simple model of a sardine.
  * Rabbits age, move, breed, and die.
  * 
  * @author David J. Barnes and Michael Kolling
@@ -46,15 +46,15 @@ public class Sardine extends Fish
     }
     
     /**
-     * This is what the rabbit does most of the time - it runs 
+     * This is what the sardine does most of the time - it runs 
      * around. Sometimes it will breed or die of old age.
-     * @param newRabbits A list to add newly born rabbits to.
+     * @param newSardines A list to add newly born rabbits to.
      */
-    public void act(List<Fish> newRabbits)
+    public void act(List<Fish> newSardines)
     {
         incrementAge();
         if(isAlive()) {
-            giveBirth(newRabbits);            
+            giveBirth(newSardines);            
             // Try to move into a free location.
             Location newLocation = getField().freeAdjacentLocation(getLocation());
             if(newLocation != null) {
@@ -69,7 +69,7 @@ public class Sardine extends Fish
 
     /**
      * Increase the age.
-     * This could result in the rabbit's death.
+     * This could result in the sardine's death.
      */
     private void incrementAge()
     {
@@ -80,13 +80,13 @@ public class Sardine extends Fish
     }
     
     /**
-     * Check whether or not this rabbit is to give birth at this step.
+     * Check whether or not this sardine is to give birth at this step.
      * New births will be made into free adjacent locations.
      * @param newRabbits A list to add newly born rabbits to.
      */
-    private void giveBirth(List<Fish> newRabbits)
+    private void giveBirth(List<Fish> newSardines)
     {
-        // New rabbits are born into adjacent locations.
+        // New sardines are born into adjacent locations.
         // Get a list of adjacent free locations.
         Ocean field = getField();
         List<Location> free = field.getFreeAdjacentLocations(getLocation());
@@ -94,7 +94,7 @@ public class Sardine extends Fish
         for(int b = 0; b < births && free.size() > 0; b++) {
             Location loc = free.remove(0);
             Sardine young = new Sardine(false, field, loc);
-            newRabbits.add(young);
+            newSardines.add(young);
         }
     }
         
@@ -113,8 +113,8 @@ public class Sardine extends Fish
     }
 
     /**
-     * A rabbit can breed if it has reached the breeding age.
-     * @return true if the rabbit can breed, false otherwise.
+     * A sardine can breed if it has reached the breeding age.
+     * @return true if the sardine can breed, false otherwise.
      */
     private boolean canBreed()
     {
