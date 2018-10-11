@@ -8,8 +8,7 @@ import java.util.Random;
  * (Fill in description and author info here)
  */
 
-public class Simulator
-{
+public class Simulator{
     private Ocean ocean;
     private int step;
     private SimulatorView simView;
@@ -18,16 +17,12 @@ public class Simulator
     private double rands;
     private static final double SARDINE_CREATION_PROBABILITY = 0.07;    
     private static final double TUNAS_CREATION_PROBABILITY = 0.05; 
-    public static void main(String[] args) 
-    {
+    public static void main(String[] args) {
         Simulator sim = new Simulator(50, 100);
         sim.simulate(100);
     }
-    
-    
-    
-    public Simulator(int height, int width)
-    {
+       
+    public Simulator(int height, int width){
     	sardines = new ArrayList<Sardine>();
     	tunas = new ArrayList<Tuna>();
         ocean = new Ocean(height, width);
@@ -39,43 +34,48 @@ public class Simulator
         simView.setColor(Tuna.class, Color.blue);
         reset();
     }
-    public void simulateOneStep()
-    {
+    public void simulateOneStep(){
         step++;
-
         // Provide space for newborn sardines.
         List<Fish> newSardines = new ArrayList<Fish>(); 
+        List<Sardine> newSardines2 = new ArrayList<Sardine>(); 
         
         // Let all sardines act.
         for(Iterator<Sardine> it = sardines.iterator(); it.hasNext(); ) {
             Sardine sardine = it.next();
             sardine.act(newSardines);
-            if(! sardine.isAlive()) {
+            if(!sardine.isAlive()) 
                 it.remove();
-            }
-            
+           //  else 
+            //	sardines.add(sardine);  
         }
-        for(Iterator<Sardine> it = sardines.iterator(); it.hasNext(); ) {
-            Sardine sardine = it.next();
-            sardines.add(sardine);
-            
+        for(Iterator<Fish> it = newSardines.iterator(); it.hasNext(); ) {
+        	Fish fish=it.next();
+        	newSardines2.add((Sardine) fish);
         }
-        
+        sardines.addAll(newSardines2);
+       // for(Iterator<Sardine> it = sardines.iterator(); it.hasNext(); ) {
+      //      Sardine sardine = it.next();
+      //      sardines.add(sardine);    
+      //  }
         
         // Provide space for newborn tunas.
-        List<Fish> newTunas = new ArrayList<Fish>();        
+        List<Fish> newTunas = new ArrayList<Fish>();   
+        List<Tuna> newTunas2 = new ArrayList<Tuna>();
         // Let all tunas act.
         for(Iterator<Tuna> it = tunas.iterator(); it.hasNext(); ) {
             Tuna tuna = it.next();
             tuna.act(newTunas);
-            if(! tuna.isAlive()) {
+            if(! tuna.isAlive()) 
                 it.remove();
-            }
+            //else 
+           // 	tunas.add(tuna);
         }
-        for(Iterator<Tuna> it = tunas.iterator(); it.hasNext(); ) {
-            Tuna tuna = it.next();
-            tunas.add(tuna);
+        for(Iterator<Fish> it = newTunas.iterator(); it.hasNext(); ) {
+        	Fish fish=it.next();
+        	newTunas2.add((Tuna) fish);
         }
+        tunas.addAll(newTunas2);
         
         // Add the newly born foxes and rabbits to the main lists.
        // sardines.addAll( newRabbits);
@@ -83,14 +83,12 @@ public class Simulator
 
         simView.showStatus(step, ocean);
     }
-    public void simulate(int numSteps)
-    {
+    public void simulate(int numSteps){
         for(int step = 1; step <= numSteps && simView.isViable(ocean); step++) {
             simulateOneStep();
         }
     }
-    public void reset()
-    {
+    public void reset(){
         step = 0;
         sardines.clear();
         tunas.clear();
@@ -100,8 +98,7 @@ public class Simulator
         // Show the starting state in the view.
         simView.showStatus(step, ocean);
     }
-    private void populate()
-    {
+    private void populate(){
         Random rand = Randomizer.getRandom();
         ocean.clear();
         for(int row = 0; row < ocean.getHeight(); row++) {
@@ -129,8 +126,6 @@ public class Simulator
     
     public void run(int steps)
     {
-        // put the simulation main loop here
-        
         simView.showStatus(0, ocean);
     }
 }
