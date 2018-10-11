@@ -10,13 +10,13 @@ import java.util.Random;
  */
 public class Sardine extends Fish
 {
-    // Characteristics shared by all rabbits (static fields).
+    // Characteristics shared by all sardines (static fields).
 
-    // The age at which a rabbit can start to breed.
+    // The age at which a sardine can start to breed.
     private static final int BREEDING_AGE = 5;
-    // The age to which a rabbit can live.
+    // The age to which a sardine can live.
     private static final int MAX_AGE = 40;
-    // The likelihood of a rabbit breeding.
+    // The likelihood of a sardine breeding.
     private static final double BREEDING_PROBABILITY = 0.15;
     // The maximum number of births.
     private static final int MAX_LITTER_SIZE = 4;
@@ -25,11 +25,11 @@ public class Sardine extends Fish
     
     // Individual characteristics (instance fields).
     
-    // The rabbit's age.
+    // The sardine's age.
     private int age;
 
     /**
-     * Create a new rabbit. A rabbit may be created with age
+     * Create a new sardine. A sardine may be created with age
      * zero (a new born) or with a random age.
      * 
      * @param randomAge If true, the rabbit will have a random age.

@@ -59,12 +59,12 @@ public class Tuna extends Fish
      */
     public void act(List<Fish> newRabbits)
     {
-        incrementAge();
+    	incrementAge();
         incrementHunger();
         if(isAlive()) {
             giveBirth(newRabbits);            
             // Try to move into a free location.
-            Location newLocation = getField().freeAdjacentLocation(getLocation());
+            Location newLocation = findFood(location);
             if(newLocation == null) {
             	newLocation = getField().freeAdjacentLocation(location);
             }
@@ -190,6 +190,7 @@ public class Tuna extends Fish
      * Indicate that the fox is no longer alive.
      * It is removed from the field.
      */
+    
     public void setDead()
     {
         alive = false;
