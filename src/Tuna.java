@@ -2,19 +2,18 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.Random;
 
-public class Tuna extends Fish
-{
+public class Tuna extends Fish{
     // The age at which a tuna can start to breed.
-    private static final int BREEDING_AGE = 7;
+    private static final int BREEDING_AGE = 5;
     // The age to which a tuna can live.
     private static final int MAX_AGE = 100;
     // The likelihood of a tuna breeding.
-    private static final double BREEDING_PROBABILITY = 0.3;
+    private static final double BREEDING_PROBABILITY = 0.4;
     // The maximum number of tunas.
-    private static final int MAX_LITTER_SIZE = 3;
+    private static final int MAX_LITTER_SIZE = 9;
     // The food value of a single sardine. In effect, this is the
     // number of steps a tuna can go before it has to eat again.
-    private static final int SARDINE_FOOD_VALUE = 6;
+    private static final int SARDINE_FOOD_VALUE = 10;
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
 
@@ -108,7 +107,7 @@ public class Tuna extends Fish
         Iterator<Location> it = adjacent.iterator();
         while(it.hasNext()) {
             Location where = it.next();
-            Cell animal = getField().getFishAt(where);
+            Fish animal = getField().getFishAt(where);
             if(animal instanceof Sardine) {
                 Sardine sardine = (Sardine) animal;
                 if(sardine.isAlive()) { 

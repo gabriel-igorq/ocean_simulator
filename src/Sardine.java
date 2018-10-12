@@ -1,18 +1,24 @@
-	import java.util.List;
-	import java.util.Iterator;
-	import java.util.Random;
+import java.util.List;
+import java.util.Iterator;
+import java.util.Random;
+
+/**
+ * 
+ * @author Gabriel Igor e Victor Hugo
+ *
+ */
 public class Sardine extends Fish{
-		    // The age at which a tuna can start to breed.
-	    private static final int BREEDING_AGE = 3;
+		// The age at which a tuna can start to breed.
+	    private static final int BREEDING_AGE = 2;
 	    // The age to which a tuna can live.
-	    private static final int MAX_AGE = 150;
+	    private static final int MAX_AGE = 85;
 	    // The likelihood of a tuna breeding.
-	    private static final double BREEDING_PROBABILITY = 0.25;
+	    private static final double BREEDING_PROBABILITY = 0.6;
 	    // The maximum number of tunas.
-	    private static final int MAX_LITTER_SIZE = 5;
+	    private static final int MAX_LITTER_SIZE = 14;
 	    // The food value of a single sardine. In effect, this is the
 	    // number of steps a tuna can go before it has to eat again.
-	    private static final int SEAWEED_FOOD_VALUE = 6;
+	    private static final int SEAWEED_FOOD_VALUE = 10;
 	    // A shared random number generator to control breeding.
 	    private static final Random rand = Randomizer.getRandom();
 
@@ -46,13 +52,12 @@ public class Sardine extends Fish{
 	     * @param field The field currently occupied.
 	     * @param newTunas A list to add newly born tunas to.
 	     */
-	    public void act(List<Actor> newSeaweeds)
+	    public void act(List<Actor> newSardines)
 	    {
 	    	incrementAge();
 	        incrementHunger();
 	        if(isAlive()) {
-	            giveBirth(newSeaweeds);            
-	            // Try to move into a free location.
+	            giveBirth(newSardines);            
 	            Location newLocation = findFood(getLocation());
 	            if(newLocation == null) {
 	            	newLocation = getField().freeAdjacentLocation(getLocation());
@@ -101,32 +106,20 @@ public class Sardine extends Fish{
 	     */
 	    private Location findFood(Location location)
 	    {
-	        List<Location> adjacent = getField().adjacentLocations(location);
-	        Iterator<Location> it = adjacent.iterator();
-	        while(it.hasNext()) {
-	        	Location where = it.next();
-	            Cell animal =  getField().getFishAt(where);
-	            if(animal instanceof Seaweed) {
-	                Seaweed seaweed = (Seaweed) animal;
-	                if(seaweed.isAlive()) { 
-	                    seaweed.setDead();
-	                    setFoodLevel(SEAWEED_FOOD_VALUE);
-	                    return where;
-	                }
-	            }
-	        	/*
-	            Location where = it.next();
-	            Seaweed seaweed = ocean.getSeaweedAt(location);
-	            if(seaweed != null) {
-	            	if(seaweed.isAlive()) {
-	            		//System.out.println("Alga:" + seaweed.getValue());
-	            		setFoodLevel(SEAWEED_FOOD_VALUE);
-	            		seaweed.setValue(0);
-	            		return where;
-	            	}
-	           	*/
-	        }
-	        return null;
+	    	Ocean ocean = getOcean();
+			List<Location> adjacent = ocean.adjacentLocations(getLocation());
+			Iterator<Location> it = adjacent.iterator();
+			while(it.hasNext()) {
+				Location where = it.next();
+				Object seaweed = ocean.getSeaweedAt(where.getRow(), where.getCol());
+				if(seaweed instanceof Seaweed && ocean.getFishAt(where) == null) {
+					Seaweed food = (Seaweed) seaweed;
+					setFoodLevel(food.getValue());
+					food.dead();
+					return where;
+				}
+			}
+			return null;
 	    }
 	    
 	    /**

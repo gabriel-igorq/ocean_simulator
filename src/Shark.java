@@ -8,23 +8,24 @@ import java.util.Random;
  * Sharks age, move, breed, and die.
  * Sharks eat groper or herring but they prefer groper.
  * Sharks are loners - they prefer not to swim next to each other
- * @author Richard Jones and Michael Kolling
+ * @author Gabriel Igor e Victor Hugo
  */
 public class Shark extends Fish
 {
  // Characteristics shared by all sharks (static fields).
     
     // The age at which a shark can start to breed.
-    private static final int BREEDING_AGE = 5;
+    private static final int BREEDING_AGE = 11;
     // The age to which a shark can live.
-    private static final int MAX_AGE = 200;
+    private static final int MAX_AGE = 130;
     // The likelihood of a shark breeding.
-    private static final double BREEDING_PROBABILITY = 0.1;
+    private static final double BREEDING_PROBABILITY = 0.45;
     // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 3;
+    private static final int MAX_LITTER_SIZE = 1;
     // The food value of a single tuna. In effect, this is the
     // number of steps a shark can go before it has to eat again.
-    private static final int RABBIT_FOOD_VALUE = 6;
+    private static final int TUNA_FOOD_VALUE = 8;
+    private static final int SARDINE_FOOD_VALUE = 5;
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
     
@@ -44,11 +45,11 @@ public class Shark extends Fish
         setAlive(true);
         if(randomAge) {
             setAge(rand.nextInt(MAX_AGE));
-            setFoodLevel(rand.nextInt(RABBIT_FOOD_VALUE));
+            setFoodLevel(rand.nextInt(TUNA_FOOD_VALUE));
         }
         else {
         	setAge(0);
-        	setFoodLevel(RABBIT_FOOD_VALUE);
+        	setFoodLevel(TUNA_FOOD_VALUE);
         }
     }
     
@@ -66,11 +67,13 @@ public class Shark extends Fish
         if(isAlive()) {
             giveBirth(newSharks);            
             // Move towards a source of food if found.
-          //  Location location = getLocation();
+            Location location = getLocation();
             Location newLocation = findFood(getLocation());
             if(newLocation == null) { 
-                // No food found - try to move to a free location.
-                newLocation = getField().freeAdjacentLocation(getLocation());
+            	newLocation = moveAway(location);
+                if(newLocation == null) {
+                	newLocation = getField().freeAdjacentLocation(getLocation());
+                }
             }
             // See if it was possible to move.
             if(newLocation != null) {
@@ -119,12 +122,12 @@ public class Shark extends Fish
         Iterator<Location> it = adjacent.iterator();
         while(it.hasNext()) {
             Location where = it.next();
-            Cell animal = getField().getFishAt(where);
+            Fish animal = getField().getFishAt(where);
             if(animal instanceof Tuna) {
                 Tuna tuna = (Tuna) animal;
                 if(tuna.isAlive()) { 
                     tuna.setDead();
-                    setFoodLevel(RABBIT_FOOD_VALUE);
+                    setFoodLevel(TUNA_FOOD_VALUE);
                     // Remove the dead tuna from the field.
                     return where;
                 }
@@ -132,18 +135,10 @@ public class Shark extends Fish
                 Sardine sardine = (Sardine) animal;
                 if(sardine.isAlive()) { 
                     sardine.setDead();
-                    setFoodLevel(RABBIT_FOOD_VALUE);
-                    // Remove the dead tuna from the field.
+                    setFoodLevel(SARDINE_FOOD_VALUE);
                     return where;
                 }
-            } else if(animal instanceof Shark) {
-                Shark shark = (Shark) animal;
-                if(shark.isAlive()) { 
-                	Location aux = getField().freeAdjacentLocation(where);
-                	Location aux2 = getField().freeAdjacentLocation(aux);
-                	return aux2;
-                }
-            }
+            } 
         }
         return null;
     }
@@ -196,5 +191,26 @@ public class Shark extends Fish
     
     public int getMaxAge() {
     	return MAX_AGE;
+    }
+    
+    public void leaveOcean() {
+    	setDead();
+    }
+    
+    private Location moveAway(Location location)
+    {
+    	Ocean ocean = getOcean();
+    	List<Location> adjacents = ocean.adjacentLocations(location);
+    	for(Location newLocation : adjacents) {
+    		Object obj = ocean.getFishAt(newLocation.getRow(),newLocation.getCol());
+    		if(obj instanceof Shark) {
+    			Shark shark = (Shark) obj;
+    			if(shark.isAlive()) {
+    				shark.leaveOcean();
+        			return newLocation;
+    			}
+    		}
+    	}
+    	return null;
     }
 }

@@ -3,6 +3,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * 
+ * @author Gabriel Igor e Victor Hugo
+ *
+ */
 public class Ocean
 {
 	 // A random number generator for providing random locations.
@@ -11,55 +16,64 @@ public class Ocean
     // The depth and width of the field.
     private int height, width;
     // Storage for the animals.
-    private Cell[][] field;
+    private Fish[][] field;
+    private Object[][] seaweeds;
     //private Seaweed[][] seaweed;
     
     
     public Ocean(int height, int width){
     	this.height = height;
         this.width = width;
-        field = new Cell[height][width];
-        //seaweed = new Seaweed[height][width];
+        field = new Fish[height][width];
+        seaweeds = new Object[height][width];
     }
     
     public void clear(){
         for(int row = 0; row < height; row++) {
             for(int col = 0; col < width; col++) {
                 field[row][col] = null;
-                //seaweed[row][col] = null;
+                seaweeds[row][col] = null;
             }
         }
     }
     public void clear(Location location){
         field[location.getRow()][location.getCol()] = null;
     }
-    /*
-    public void clearSeaweed(Location location) {
-    	seaweed[location.getRow()][location.getCol()] = null;
-    }*/
+
     
-    public void place(Cell fish, int row, int col){
+    public void place(Fish fish, int row, int col){
         place(fish, new Location(row, col));
     }
-    public void place(Cell fish, Location location){
+    public void place(Fish fish, Location location){
         field[location.getRow()][location.getCol()] = fish;
     }
-  /*
-    public void place(Seaweed newSeaweed, Location location) {
-    	seaweed[location.getRow()][location.getCol()] = newSeaweed;
+  
+    public void place(Object seaweed, int row, int col){
+    	place(seaweed, new Location(row,col));
     }
-    */
-    public Cell getFishAt(Location location){
+    
+    public void place(Object seaweed, Location location){
+    	seaweeds[location.getRow()][location.getCol()] = seaweed;
+    }
+    
+    
+    public Fish getFishAt(Location location){
         return getFishAt(location.getRow(), location.getCol());
     }
-    public Cell getFishAt(int row, int col){
+    public Fish getFishAt(int row, int col){
         return field[row][col];
     }
-    /*
-    public Seaweed getSeaweedAt(Location location) {
-    	return seaweed[location.getRow()][location.getCol()];
+    
+    public Object getSeaweedAt(Location location)
+    {
+        return getSeaweedAt(location.getRow(), location.getCol());
     }
-    */
+    
+    public Object getSeaweedAt(int row, int col)
+    {
+        return seaweeds[row][col];
+    }
+    
     public int getHeight(){
         // put something here
         return height;
@@ -120,5 +134,30 @@ public class Ocean
     public int getWidth(){
         // and something here
         return width;
+    }
+    
+    public void seaweedExpansion() {
+    	Random rand = new Random();
+        for(int row = 0; row < height; row++) {
+            for(int col = 0; col < width; col++) {
+                Location location = new Location(row, col);
+                Seaweed seaweed = (Seaweed) getSeaweedAt(location);
+                if(seaweed != null) {
+                    seaweed.heal(rand.nextInt(11));
+                    seaweed.expanding();
+                    seaweed.setIsAlive();
+                }
+            }
+    	}
+    }
+    
+    public Location random(Location location)
+    {
+        List<Location> adjacent = adjacentLocations(location);
+        if(adjacent.size() > 0) {
+        	return adjacent.get(0);
+        } else {
+        	return null;
+        }
     }
 }

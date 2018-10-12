@@ -28,7 +28,7 @@ public class SimulatorView extends JFrame
     private OceanView oceanView;
     
     // A map for storing colors for participants in the simulation
-    private HashMap<Class<? extends Cell>, Color> colors;
+    private HashMap<Class<? extends Fish>, Color> colors;
     // A statistics object computing and storing simulation information
     private OceanStats stats;
 
@@ -40,7 +40,7 @@ public class SimulatorView extends JFrame
     public SimulatorView(int height, int width)
     {
         stats = new OceanStats();
-        colors = new HashMap<Class<? extends Cell>,Color>();
+        colors = new HashMap<Class<? extends Fish>,Color>();
 
         setTitle("SimOcean");
         stepLabel = new JLabel(STEP_PREFIX, JLabel.CENTER);
@@ -61,7 +61,7 @@ public class SimulatorView extends JFrame
     /**
      * Define a color to be used for a given class of fish.
      */
-    public void setColor(Class<? extends Cell> fishClass, Color color)
+    public void setColor(Class<? extends Fish> fishClass, Color color)
     {
         colors.put(fishClass, color);
     }
@@ -69,7 +69,7 @@ public class SimulatorView extends JFrame
     /**
      * @return The color to be used for a given class of fish.
      */
-    private Color getColor(Class<? extends Cell> fishClass)
+    private Color getColor(Class<? extends Fish> fishClass)
     {
         Color col = colors.get(fishClass);
         if(col == null) {
@@ -99,7 +99,7 @@ public class SimulatorView extends JFrame
             
         for(int row = 0; row < ocean.getHeight(); row++) {
             for(int col = 0; col < ocean.getWidth(); col++) {
-                Cell fish = ocean.getFishAt(row, col);
+                Fish fish = ocean.getFishAt(row, col);
                 if(fish != null) {
                     stats.incrementCount(fish.getClass());
                     oceanView.drawMark(col, row, getColor(fish.getClass()));
