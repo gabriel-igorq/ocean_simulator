@@ -11,38 +11,55 @@ public class Ocean
     // The depth and width of the field.
     private int height, width;
     // Storage for the animals.
-    private Fish[][] field;
+    private Cell[][] field;
+    //private Seaweed[][] seaweed;
     
     
     public Ocean(int height, int width){
     	this.height = height;
         this.width = width;
-        field = new Fish[height][width];
+        field = new Cell[height][width];
+        //seaweed = new Seaweed[height][width];
     }
     
     public void clear(){
         for(int row = 0; row < height; row++) {
             for(int col = 0; col < width; col++) {
                 field[row][col] = null;
+                //seaweed[row][col] = null;
             }
         }
     }
     public void clear(Location location){
         field[location.getRow()][location.getCol()] = null;
     }
+    /*
+    public void clearSeaweed(Location location) {
+    	seaweed[location.getRow()][location.getCol()] = null;
+    }*/
     
-    public void place(Fish fish, int row, int col){
+    public void place(Cell fish, int row, int col){
         place(fish, new Location(row, col));
     }
-    public void place(Fish fish, Location location){
+    public void place(Cell fish, Location location){
         field[location.getRow()][location.getCol()] = fish;
     }
-    public Fish getFishAt(Location location){
+  /*
+    public void place(Seaweed newSeaweed, Location location) {
+    	seaweed[location.getRow()][location.getCol()] = newSeaweed;
+    }
+    */
+    public Cell getFishAt(Location location){
         return getFishAt(location.getRow(), location.getCol());
     }
-    public Fish getFishAt(int row, int col){
+    public Cell getFishAt(int row, int col){
         return field[row][col];
     }
+    /*
+    public Seaweed getSeaweedAt(Location location) {
+    	return seaweed[location.getRow()][location.getCol()];
+    }
+    */
     public int getHeight(){
         // put something here
         return height;

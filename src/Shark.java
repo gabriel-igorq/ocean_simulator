@@ -15,24 +15,19 @@ public class Shark extends Fish
  // Characteristics shared by all sharks (static fields).
     
     // The age at which a shark can start to breed.
-    private static final int BREEDING_AGE = 10;
+    private static final int BREEDING_AGE = 5;
     // The age to which a shark can live.
-    private static final int MAX_AGE = 100;
+    private static final int MAX_AGE = 200;
     // The likelihood of a shark breeding.
-    private static final double BREEDING_PROBABILITY = 0.35;
+    private static final double BREEDING_PROBABILITY = 0.1;
     // The maximum number of births.
-    private static final int MAX_LITTER_SIZE = 5;
+    private static final int MAX_LITTER_SIZE = 3;
     // The food value of a single tuna. In effect, this is the
     // number of steps a shark can go before it has to eat again.
-    private static final int RABBIT_FOOD_VALUE = 3;
+    private static final int RABBIT_FOOD_VALUE = 6;
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
     
-    // Individual characteristics (instance fields).
-    // The shark's age.
-    private int age;
-    // The shark's food level, which is increased by eating rabbits.
-    private int foodLevel;
 
     /**
      * Create a shark. A shark can be created as a new born (age zero
@@ -45,13 +40,15 @@ public class Shark extends Fish
     public Shark(boolean randomAge, Ocean field, Location location)
     {
         super(field, location);
+        setAge (0);
+        setAlive(true);
         if(randomAge) {
-            age = rand.nextInt(MAX_AGE);
-            foodLevel = rand.nextInt(RABBIT_FOOD_VALUE);
+            setAge(rand.nextInt(MAX_AGE));
+            setFoodLevel(rand.nextInt(RABBIT_FOOD_VALUE));
         }
         else {
-            age = 0;
-            foodLevel = RABBIT_FOOD_VALUE;
+        	setAge(0);
+        	setFoodLevel(RABBIT_FOOD_VALUE);
         }
     }
     
@@ -62,18 +59,18 @@ public class Shark extends Fish
      * @param field The field currently occupied.
      * @param newSharks A list to add newly born sharks to.
      */
-    public void act(List<Fish> newSharks)
+    public void act(List<Actor> newSharks)
     {
         incrementAge();
         incrementHunger();
         if(isAlive()) {
             giveBirth(newSharks);            
             // Move towards a source of food if found.
-            Location location = getLocation();
-            Location newLocation = findFood(location);
+          //  Location location = getLocation();
+            Location newLocation = findFood(getLocation());
             if(newLocation == null) { 
                 // No food found - try to move to a free location.
-                newLocation = getField().freeAdjacentLocation(location);
+                newLocation = getField().freeAdjacentLocation(getLocation());
             }
             // See if it was possible to move.
             if(newLocation != null) {
@@ -89,21 +86,23 @@ public class Shark extends Fish
     /**
      * Increase the age. This could result in the shark's death.
      */
+    /*
     private void incrementAge()
     {
-        age++;
-        if(age > MAX_AGE) {
+    	setAge(getAge()+1);
+        if(getAge() > MAX_AGE) {
             setDead();
         }
     }
+    */
     
     /**
      * Make this shark more hungry. This could result in the sharks's death.
      */
     private void incrementHunger()
     {
-        foodLevel--;
-        if(foodLevel <= 0) {
+    	setFoodLevel(getFoodLevel()-1);
+        if(getFoodLevel() <= 0) {
             setDead();
         }
     }
@@ -116,17 +115,16 @@ public class Shark extends Fish
      */
     private Location findFood(Location location)
     {
-        Ocean field = getField();
-        List<Location> adjacent = field.adjacentLocations(getLocation());
+        List<Location> adjacent = getField().adjacentLocations(location);
         Iterator<Location> it = adjacent.iterator();
         while(it.hasNext()) {
             Location where = it.next();
-            Fish animal = field.getFishAt(where);
+            Cell animal = getField().getFishAt(where);
             if(animal instanceof Tuna) {
                 Tuna tuna = (Tuna) animal;
                 if(tuna.isAlive()) { 
                     tuna.setDead();
-                    foodLevel = RABBIT_FOOD_VALUE;
+                    setFoodLevel(RABBIT_FOOD_VALUE);
                     // Remove the dead tuna from the field.
                     return where;
                 }
@@ -134,9 +132,16 @@ public class Shark extends Fish
                 Sardine sardine = (Sardine) animal;
                 if(sardine.isAlive()) { 
                     sardine.setDead();
-                    foodLevel = RABBIT_FOOD_VALUE;
+                    setFoodLevel(RABBIT_FOOD_VALUE);
                     // Remove the dead tuna from the field.
                     return where;
+                }
+            } else if(animal instanceof Shark) {
+                Shark shark = (Shark) animal;
+                if(shark.isAlive()) { 
+                	Location aux = getField().freeAdjacentLocation(where);
+                	Location aux2 = getField().freeAdjacentLocation(aux);
+                	return aux2;
                 }
             }
         }
@@ -148,16 +153,15 @@ public class Shark extends Fish
      * New births will be made into free adjacent locations.
      * @param newSharks A list to add newly born sharks to.
      */
-    private void giveBirth(List<Fish> newSharks)
+    private void giveBirth(List<Actor> newSharks)
     {
         // New sharks are born into adjacent locations.
         // Get a list of adjacent free locations.
-        Ocean field = getField();
-        List<Location> free = field.getFreeAdjacentLocations(getLocation());
+        List<Location> free = getField().getFreeAdjacentLocations(getLocation());
         int births = breed();
         for(int b = 0; b < births && free.size() > 0; b++) {
             Location loc = free.remove(0);
-            Shark young = new Shark(false, field, loc);
+            Shark young = new Shark(false, getField(), loc);
             newSharks.add(young);
         }
     }
@@ -179,8 +183,18 @@ public class Shark extends Fish
     /**
      * A shark can breed if it has reached the breeding age.
      */
+    /*
     private boolean canBreed()
     {
-        return age >= BREEDING_AGE;
+        return getAge() >= BREEDING_AGE;
+    }
+    */
+    
+    public int getBreedingAge() {
+    	return BREEDING_AGE;
+    }
+    
+    public int getMaxAge() {
+    	return MAX_AGE;
     }
 }

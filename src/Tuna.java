@@ -5,28 +5,19 @@ import java.util.Random;
 public class Tuna extends Fish
 {
     // The age at which a tuna can start to breed.
-    private static final int BREEDING_AGE = 10;
+    private static final int BREEDING_AGE = 7;
     // The age to which a tuna can live.
-    private static final int MAX_AGE = 150;
+    private static final int MAX_AGE = 100;
     // The likelihood of a tuna breeding.
-    private static final double BREEDING_PROBABILITY = 0.35;
+    private static final double BREEDING_PROBABILITY = 0.3;
     // The maximum number of tunas.
-    private static final int MAX_LITTER_SIZE = 5;
+    private static final int MAX_LITTER_SIZE = 3;
     // The food value of a single sardine. In effect, this is the
     // number of steps a tuna can go before it has to eat again.
-    private static final int SARDINE_FOOD_VALUE = 7;
+    private static final int SARDINE_FOOD_VALUE = 6;
     // A shared random number generator to control breeding.
     private static final Random rand = Randomizer.getRandom();
 
-    // The tuna's age.
-    private int age;
-    // Whether the tuna is alive or not.
-    private boolean alive;
-    // The tuna's position.
-    private Location location;
-    // The field occupied.
-    // The tuna's food level, which is increased by eating sardines.
-    private int foodLevel;
 
     /**
      * Create a tuna. A tuna can be created as a new born (age zero
@@ -38,15 +29,15 @@ public class Tuna extends Fish
      */
     public Tuna(boolean randomAge, Ocean field, Location location){
     	super(field, location);
-        age = 0;
-        alive = true;
+        setAge (0);
+        setAlive(true);
         if(randomAge) {
-            age = rand.nextInt(MAX_AGE);
-            foodLevel = rand.nextInt(SARDINE_FOOD_VALUE);
+            setAge( rand.nextInt(MAX_AGE));
+            setFoodLevel(rand.nextInt(SARDINE_FOOD_VALUE));
         }
         else {
             // leave age at 0
-            foodLevel = SARDINE_FOOD_VALUE;
+            setFoodLevel(SARDINE_FOOD_VALUE);
         }
     }
     
@@ -57,16 +48,16 @@ public class Tuna extends Fish
      * @param field The field currently occupied.
      * @param newTunas A list to add newly born tunas to.
      */
-    public void act(List<Fish> newTunas)
+    public void act(List<Actor> newTunas)
     {
     	incrementAge();
         incrementHunger();
         if(isAlive()) {
             giveBirth(newTunas);            
             // Try to move into a free location.
-            Location newLocation = findFood(location);
+            Location newLocation = findFood(getLocation());
             if(newLocation == null) {
-            	newLocation = getField().freeAdjacentLocation(location);
+            	newLocation = getField().freeAdjacentLocation(getLocation());
             }
             if(newLocation != null) {
                 setLocation(newLocation);
@@ -82,40 +73,25 @@ public class Tuna extends Fish
      * Check whether the tuna is alive or not.
      * @return True if the tuna is still alive.
      */
-    public boolean isAlive()
-    {
-        return alive;
-    }
 
-    public Location getLocation()
-    {
-        return location;
-    }
-    
-    public void setLocation(Location newLocation)
-    {
-        if(location != null) {
-            getField().clear(location);
-        }
-        location = newLocation;
-        getField().place(this, newLocation);
-    }
-
+  
+/*
     private void incrementAge()
     {
-        age++;
-        if(age > MAX_AGE) {
+        setAge(getAge()+1);
+        if(getAge() > MAX_AGE) {
             setDead();
         }
     }
+    */
     
     /**
      * Make this tuna more hungry. This could result in the tuna's death.
      */
     private void incrementHunger()
     {
-        foodLevel--;
-        if(foodLevel <= 0) {
+    	setFoodLevel(getFoodLevel()-1);
+        if(getFoodLevel() <= 0) {
             setDead();
         }
     }
@@ -132,12 +108,12 @@ public class Tuna extends Fish
         Iterator<Location> it = adjacent.iterator();
         while(it.hasNext()) {
             Location where = it.next();
-            Fish animal = getField().getFishAt(where);
+            Cell animal = getField().getFishAt(where);
             if(animal instanceof Sardine) {
                 Sardine sardine = (Sardine) animal;
                 if(sardine.isAlive()) { 
                     sardine.setDead();
-                    foodLevel = SARDINE_FOOD_VALUE;
+                    setFoodLevel(SARDINE_FOOD_VALUE);
                     // Remove the dead rabbit from the field.
                     return where;
                 }
@@ -151,11 +127,11 @@ public class Tuna extends Fish
      * New births will be made into free adjacent locations.
      * @param newTunas A list to add newly born foxes to.
      */
-    private void giveBirth(List<Fish> newTunas)
+    private void giveBirth(List<Actor> newTunas)
     {
         // New tunas are born into adjacent locations.
         // Get a list of adjacent free locations.
-        List<Location> free = getField().getFreeAdjacentLocations(location);
+        List<Location> free = getField().getFreeAdjacentLocations(getLocation());
         int births = breed();
         for(int b = 0; b < births && free.size() > 0; b++) {
             Location loc = free.remove(0);
@@ -181,23 +157,22 @@ public class Tuna extends Fish
     /**
      * A tuna can breed if it has reached the breeding age.
      */
+    /*
     private boolean canBreed()
     {
-        return age >= BREEDING_AGE;
+        return getAge() >= BREEDING_AGE;
     }
-
+	*/
     /**
      * Indicate that the tuna is no longer alive.
      * It is removed from the field.
      */
     
-    public void setDead()
-    {
-        alive = false;
-        if(location != null) {
-            getField().clear(location);
-            location = null;
-            setField(null);
-        }
+    public int getBreedingAge() {
+    	return BREEDING_AGE;
+    }
+    
+    public int getMaxAge() {
+    	return MAX_AGE;
     }
 }

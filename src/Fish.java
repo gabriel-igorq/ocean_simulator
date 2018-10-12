@@ -1,16 +1,12 @@
-import java.util.List;
 
 /**
  *Classe baseada em Animal, do projeto fox and rabbits
  */
-public abstract class Fish{
-    // Whether the animal is alive or not.
-    private boolean alive;
-    // The animal's field.
-    private Ocean field;
-    // The animal's position in the field.
-    private Location location;
-    
+public abstract class Fish extends Cell{
+	// The tuna's age.
+    private int age;
+    // The tuna's food level, which is increased by eating sardines.
+    private int foodLevel;
     /**
      * Create a new animal at location in field.
      * 
@@ -18,66 +14,46 @@ public abstract class Fish{
      * @param location The location within the field.
      */
     public Fish(Ocean field, Location location){
-        alive = true;
-        this.field = field;
-        setLocation(location);
+    	super(field,location);
+    }
+	public int getFoodLevel() {
+		return foodLevel;
+	}
+	public void setFoodLevel(int foodLevel) {
+		this.foodLevel = foodLevel;
+	}
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	
+	/*public void setDead()
+    {
+        setAlive (false);
+        if(getLocation() != null) {
+            getField().clear(getLocation());
+            setLocation(null);
+            setField(null);
+        }
+    }*/
+	
+    public boolean canBreed()
+    {
+        return getAge() >= getBreedingAge();
     }
     
-    /**
-     * Make this animal act - that is: make it do
-     * whatever it wants/needs to do.
-     * @param newAnimals A list to add newly born animals to.
-     */
-    abstract public void act(List<Fish> newAnimals);
-
-    /**
-     * Check whether the animal is alive or not.
-     * @return true if the animal is still alive.
-     */
-    public boolean isAlive(){
-        return alive;
-    }
-
-    /**
-     * Indicate that the animal is no longer alive.
-     * It is removed from the field.
-     */
-    public void setDead(){
-        alive = false;
-        if(location != null) {
-            field.clear(location);
-            location = null;
-            field = null;
+    abstract public int getBreedingAge();
+   
+    public void incrementAge()
+    {
+        age++;
+        if(age > getMaxAge()) {
+            setDead();
         }
-    }
-
-    /**
-     * Return the animal's location.
-     * @return The animal's location.
-     */
-    public Location getLocation(){
-        return location;
     }
     
-    /**
-     * Return the animal's field.
-     * @return The animal's field.
-     */
-    public Ocean getField(){
-        return field;
-    }
-    public void setField(Ocean field){
-        this.field=field;
-    }
-    /**
-     * Place the animal at the new location in the given field.
-     * @param newLocation The animal's new location.
-     */
-    public void setLocation(Location newLocation){
-        if(location != null) {
-            field.clear(location);
-        }
-        location = newLocation;
-        field.place(this, newLocation);
-    }
+    abstract public int getMaxAge();
+    
 }
