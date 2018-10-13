@@ -199,7 +199,7 @@ public class Shark extends Fish
     
     private Location moveAway(Location location)
     {
-    	Ocean ocean = getOcean();
+    	Ocean ocean = getField();
     	List<Location> adjacents = ocean.adjacentLocations(location);
     	for(Location newLocation : adjacents) {
     		Object obj = ocean.getFishAt(newLocation.getRow(),newLocation.getCol());

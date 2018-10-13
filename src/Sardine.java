@@ -3,54 +3,52 @@ import java.util.Iterator;
 import java.util.Random;
 
 /**
+ * Uma classe que representa Sardinhas. Por ser um tipo de peixe, herda
+ * da classe Fish.
  * 
- * @author Gabriel Igor e Victor Hugo
- *
+ * @author Gabriel Igor Queiroz Costa, Victor Hugo Freire Ramalho
+ * @version 12/10/2018
  */
 public class Sardine extends Fish{
-		// The age at which a tuna can start to breed.
+		// Idade na qual as sardinha se reproduzem
 	    private static final int BREEDING_AGE = 2;
-	    // The age to which a tuna can live.
+	    // Idade máxima que sardinhas vivem
 	    private static final int MAX_AGE = 85;
-	    // The likelihood of a tuna breeding.
+	    // Probabilidade de se reproduzir
 	    private static final double BREEDING_PROBABILITY = 0.6;
-	    // The maximum number of tunas.
+	    // Número máximo de sardinhas geradas ao se reproduzir
 	    private static final int MAX_LITTER_SIZE = 14;
-	    // The food value of a single sardine. In effect, this is the
-	    // number of steps a tuna can go before it has to eat again.
+	    // O valor de satisfação das algas
 	    private static final int SEAWEED_FOOD_VALUE = 10;
-	    // A shared random number generator to control breeding.
+	    // Gerador de número randômico
 	    private static final Random rand = Randomizer.getRandom();
 
 
 	    /**
-	     * Create a tuna. A tuna can be created as a new born (age zero
-	     * and not hungry) or with a random age and food level.
+	     * Cria uma nova sardinha em algum lugar do oceano
 	     * 
-	     * @param randomAge If true, the tuna will have random age and hunger level.
-	     * @param field The field currently occupied.
-	     * @param location The location within the field.
+	     * @param randomAge Se o peixe deve possuir uma idade aleatória
+	     * @param field O oceano em que a alga está.
+	     * @param location A localização dentro do oceano.
 	     */
 	    public Sardine(boolean randomAge, Ocean field, Location location){
 	    	super(field, location);
-	        setAge(0);
 	        setAlive(true);
 	        if(randomAge) {
 	            setAge(rand.nextInt(MAX_AGE));
 	            setFoodLevel(rand.nextInt(SEAWEED_FOOD_VALUE));
 	        }
 	        else {
-	            // leave age at 0
+	        	setAge(0);
 	            setFoodLevel(SEAWEED_FOOD_VALUE);
 	        }
 	    }
 	    
 	    /**
-	     * This is what the tuna does most of the time: it hunts for
-	     * sardines. In the process, it might breed, die of hunger,
-	     * or die of old age.
-	     * @param field The field currently occupied.
-	     * @param newTunas A list to add newly born tunas to.
+	     * Isso é o que a sardinha faz geralmente: caça por algas. Nesse
+	     * process, se reproduz, morre de fome ou pela idade
+		 *
+	     * @param newSardine Uma lista para adicionar novas sardinhas 
 	     */
 	    public void act(List<Actor> newSardines)
 	    {
@@ -66,29 +64,15 @@ public class Sardine extends Fish{
 	                setLocation(newLocation);
 	            }
 	            else {
-	                // Overcrowding.
 	                setDead();
 	            }
 	        }
 	    }
 
-	    /**
-	     * Check whether the tuna is alive or not.
-	     * @return True if the tuna is still alive.
-*/
-
-	    /*
-	    private void incrementAge()
-	    {
-	        setAge(getAge() + 1);
-	        if(getAge() > MAX_AGE) {
-	            setDead();
-	        }
-	    }
-	    */
+	   
 	    
 	    /**
-	     * Make this tuna more hungry. This could result in the tuna's death.
+	     * Deixa a sardinha com mais fome, podendo resultar em sua morte
 	     */
 	    private void incrementHunger()
 	    {
@@ -99,14 +83,15 @@ public class Sardine extends Fish{
 	    }
 	    
 	    /**
-	     * Tell the tuna to look for sardines adjacent to its current location.
-	     * Only the first live sardine is eaten.
-	     * @param location Where in the field it is located.
-	     * @return Where food was found, or null if it wasn't.
+	     * A sardinha procura por comida em lugares adjacetes a sua posição atual.
+	     * A primeira alga viva é comida.
+	     * 
+	     * @param location Onde está a sardinha no oceano.
+	     * @return Onde a comida foi encontrada. Null se não foi encontrada.
 	     */
 	    private Location findFood(Location location)
 	    {
-	    	Ocean ocean = getOcean();
+	    	Ocean ocean = getField();
 			List<Location> adjacent = ocean.adjacentLocations(getLocation());
 			Iterator<Location> it = adjacent.iterator();
 			while(it.hasNext()) {
@@ -123,8 +108,8 @@ public class Sardine extends Fish{
 	    }
 	    
 	    /**
-	     * Check whether or not this tuna is to give birth at this step.
-	     * New births will be made into free adjacent locations.
+	     * Verifica se a sardinha pode se reproduzir.
+	     * Novas sardinha são geradas em posições adjacentes.
 	     * @param newTunas A list to add newly born foxes to.
 	     */
 	    private void giveBirth(List<Actor> newTunas)
