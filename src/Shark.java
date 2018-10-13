@@ -2,41 +2,37 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-
 /**
- * A simple model of a shark.
- * Sharks age, move, breed, and die.
- * Sharks eat groper or herring but they prefer groper.
- * Sharks are loners - they prefer not to swim next to each other
- * @author Gabriel Igor e Victor Hugo
- */
+  * Um modelo simples de um tubarão.
+  * Os tubarões envelhecem, se movem, se reproduzem e morrem.
+  * Os tubarões comem atuns ou sardinhas, mas preferem atuns.
+  * Os tubarões são solitários - eles preferem não nadar um ao lado do outro
+  * @author Gabriel Igor e Victor Hugo
+  */
 public class Shark extends Fish
 {
- // Characteristics shared by all sharks (static fields).
-    
-    // The age at which a shark can start to breed.
+	// A idade em que um tubarão pode começar a se reproduzir.
     private static final int BREEDING_AGE = 11;
-    // The age to which a shark can live.
+    // A idade maxima em que um tubarão pode viver.
     private static final int MAX_AGE = 130;
-    // The likelihood of a shark breeding.
+    // Probabilidade de criação de tubarões.
     private static final double BREEDING_PROBABILITY = 0.45;
-    // The maximum number of births.
+    // O numero maximo de aniversarios.
     private static final int MAX_LITTER_SIZE = 1;
-    // The food value of a single tuna. In effect, this is the
-    // number of steps a shark can go before it has to eat again.
+    // O valor alimentar de um único atum ou sardinha. Com efeito, esta é o
+    // número de passos que um tubarão pode ter antes de comer novamente.
     private static final int TUNA_FOOD_VALUE = 8;
     private static final int SARDINE_FOOD_VALUE = 5;
-    // A shared random number generator to control breeding.
+    // Um gerador de números aleatórios compartilhados para controlar a reprodução.
     private static final Random rand = Randomizer.getRandom();
     
 
     /**
-     * Create a shark. A shark can be created as a new born (age zero
-     * and not hungry) or with a random age and food level.
-     * 
-     * @param randomAge If true, the shark will have random age and hunger level.
-     * @param field The field currently occupied.
-     * @param location The location within the field.
+      * Cria um tubarão. Um tubarão pode ser criado como um recém nascido (idade zero
+      * e sem fome) ou com uma idade aleatória e nível de comida.
+      * @param randomAge Se verdadeiro, o tubarão terá idade e nível de fome aleatórios.
+      * @param field O campo atualmente ocupado.
+      * @param location A localização dentro do campo.
      */
     public Shark(boolean randomAge, Ocean field, Location location)
     {
@@ -54,19 +50,19 @@ public class Shark extends Fish
     }
     
     /**
-     * This is what the sharks does most of the time: it hunts for
-     * food. In the process, it might breed, die of hunger,
-     * or die of old age.
-     * @param field The field currently occupied.
-     * @param newSharks A list to add newly born sharks to.
-     */
+    * Isto é o que os tubarões fazem a maior parte do tempo: eles caçam
+    * Comida. No processo, pode se reproduzir, morrer de fome,
+    * ou morrer de velhice.
+    * @param field O campo atualmente ocupado.
+    * @param newSharks Uma lista para adicionar tubarões recém-nascidos.
+    */
     public void act(List<Actor> newSharks)
     {
         incrementAge();
         incrementHunger();
         if(isAlive()) {
             giveBirth(newSharks);            
-            // Move towards a source of food if found.
+            // Move-se em direção a uma fonte de comida, se encontrada.
             Location location = getLocation();
             Location newLocation = findFood(getLocation());
             if(newLocation == null) { 
@@ -75,33 +71,19 @@ public class Shark extends Fish
                 	newLocation = getField().freeAdjacentLocation(getLocation());
                 }
             }
-            // See if it was possible to move.
+            // Ve se é possivel se mover
             if(newLocation != null) {
                 setLocation(newLocation);
             }
             else {
-                // Overcrowding.
                 setDead();
             }
         }
     }
 
     /**
-     * Increase the age. This could result in the shark's death.
-     */
-    /*
-    private void incrementAge()
-    {
-    	setAge(getAge()+1);
-        if(getAge() > MAX_AGE) {
-            setDead();
-        }
-    }
-    */
-    
-    /**
-     * Make this shark more hungry. This could result in the sharks's death.
-     */
+     * Torne este tubarão mais faminto. Isso pode resultar na morte do tubarão.
+     */
     private void incrementHunger()
     {
     	setFoodLevel(getFoodLevel()-1);
@@ -111,11 +93,11 @@ public class Shark extends Fish
     }
     
     /**
-     * Tell the sharks to look for tunas adjacent to its current location.
-     * Only the first live tuna or sardine is eaten.
-     * @param location Where in the field it is located.
-     * @return Where food was found, or null if it wasn't.
-     */
+     * Diz aos tubarões para procurar atuns adjacentes à sua localização atual.
+     * Apenas o primeiro atum vivo ou sardinha é comido.
+     * @param location Onde no campo está localizado.
+     * @return Onde a comida foi encontrada, ou null, se não foi.
+     */
     private Location findFood(Location location)
     {
         List<Location> adjacent = getField().adjacentLocations(location);
@@ -128,7 +110,6 @@ public class Shark extends Fish
                 if(tuna.isAlive()) { 
                     tuna.setDead();
                     setFoodLevel(TUNA_FOOD_VALUE);
-                    // Remove the dead tuna from the field.
                     return where;
                 }
             } else if(animal instanceof Sardine) {
@@ -144,14 +125,12 @@ public class Shark extends Fish
     }
     
     /**
-     * Check whether or not this shark is to give birth at this step.
-     * New births will be made into free adjacent locations.
-     * @param newSharks A list to add newly born sharks to.
-     */
+     * Verifique se este tubarão deve ou ter filhos neste passo.
+     * Novos nascimentos serão feitos em locais adjacentes livres.
+     * @param newSharks Uma lista para adicionar tubarões recém-nascidos.
+     */
     private void giveBirth(List<Actor> newSharks)
     {
-        // New sharks are born into adjacent locations.
-        // Get a list of adjacent free locations.
         List<Location> free = getField().getFreeAdjacentLocations(getLocation());
         int births = breed();
         for(int b = 0; b < births && free.size() > 0; b++) {
@@ -162,10 +141,9 @@ public class Shark extends Fish
     }
         
     /**
-     * Generate a number representing the number of births,
-     * if it can breed.
-     * @return The number of births (may be zero).
-     */
+     * Gera um número representando o número de nascimentos, se pode se reproduzir.
+     * @return O número de nascimentos.
+     */
     private int breed()
     {
         int births = 0;
@@ -176,27 +154,30 @@ public class Shark extends Fish
     }
 
     /**
-     * A shark can breed if it has reached the breeding age.
+     * Retorna a idade de reprodução
+     * @return a idade de reprodução
      */
-    /*
-    private boolean canBreed()
-    {
-        return getAge() >= BREEDING_AGE;
-    }
-    */
-    
     public int getBreedingAge() {
     	return BREEDING_AGE;
     }
-    
+    /**
+     * Retorna a idade maxima
+     * @return a idade maxima
+     */
     public int getMaxAge() {
     	return MAX_AGE;
     }
-    
+    /**
+     * Faz o tubarão morrer, retirando-o do oceano.
+     */
     public void leaveOcean() {
     	setDead();
     }
-    
+    /**
+     * Faz o tubarão se mover. Se caso ache um tubarão proximo, deve sair de perto.
+     * @param location Onde está localizado no campo
+     * @return Se foi encontrado tubarão, ou null, se não foi.
+     */
     private Location moveAway(Location location)
     {
     	Ocean ocean = getField();

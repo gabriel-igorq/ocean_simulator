@@ -1,30 +1,34 @@
 import java.util.List;
 import java.util.Iterator;
 import java.util.Random;
-
+/**
+ * Um modelo simples de um atum.
+ * Os atuns envelhecem, se movem, se reproduzem e morrem.
+ * Os atuns comem sardinhas.
+ * @author Gabriel Igor e Victor Hugo
+ */
 public class Tuna extends Fish{
-    // The age at which a tuna can start to breed.
+	// A idade em que um atum pode começar a se reproduzir.
     private static final int BREEDING_AGE = 5;
-    // The age to which a tuna can live.
+    // A idade maxima em que um atum pode viver.
     private static final int MAX_AGE = 100;
-    // The likelihood of a tuna breeding.
+    // Probabilidade de criação de atuns.
     private static final double BREEDING_PROBABILITY = 0.4;
-    // The maximum number of tunas.
+    // O numero maximo de atuns.
     private static final int MAX_LITTER_SIZE = 9;
-    // The food value of a single sardine. In effect, this is the
-    // number of steps a tuna can go before it has to eat again.
+    // O valor alimentar de uma única sardinha. Com efeito, esta é o
+    // número de passos que um atum pode ter antes de comer novamente.
     private static final int SARDINE_FOOD_VALUE = 10;
-    // A shared random number generator to control breeding.
+    // Um gerador de números aleatórios compartilhados para controlar a reprodução.
     private static final Random rand = Randomizer.getRandom();
 
 
     /**
-     * Create a tuna. A tuna can be created as a new born (age zero
-     * and not hungry) or with a random age and food level.
-     * 
-     * @param randomAge If true, the tuna will have random age and hunger level.
-     * @param field The field currently occupied.
-     * @param location The location within the field.
+     * Cria um atum. Um atum pode ser criado como um recém nascido (idade zero
+     * e sem fome) ou com uma idade aleatória e nível de comida.
+     * @param randomAge Se verdadeiro, o atum terá idade e nível de fome aleatórios.
+     * @param field O campo atualmente ocupado.
+     * @param location A localização dentro do campo.
      */
     public Tuna(boolean randomAge, Ocean field, Location location){
     	super(field, location);
@@ -41,11 +45,10 @@ public class Tuna extends Fish{
     }
     
     /**
-     * This is what the tuna does most of the time: it hunts for
-     * sardines. In the process, it might breed, die of hunger,
-     * or die of old age.
-     * @param field The field currently occupied.
-     * @param newTunas A list to add newly born tunas to.
+     * Isto é o que o atum faz a maior parte do tempo: procura sardinhas.
+     * No processo, pode se reproduzir, morrer de fome ou morrer de velhice.
+     * @param field O campo atualmente ocupado.
+     * @param newTunas Uma lista para adicionar atuns recém-nascidos.
      */
     public void act(List<Actor> newTunas)
     {
@@ -53,7 +56,7 @@ public class Tuna extends Fish{
         incrementHunger();
         if(isAlive()) {
             giveBirth(newTunas);            
-            // Try to move into a free location.
+            // Tenta mover para uma localização livre
             Location newLocation = findFood(getLocation());
             if(newLocation == null) {
             	newLocation = getField().freeAdjacentLocation(getLocation());
@@ -62,31 +65,14 @@ public class Tuna extends Fish{
                 setLocation(newLocation);
             }
             else {
-                // Overcrowding.
                 setDead();
             }
         }
     }
-
+   
     /**
-     * Check whether the tuna is alive or not.
-     * @return True if the tuna is still alive.
-     */
-
-  
-/*
-    private void incrementAge()
-    {
-        setAge(getAge()+1);
-        if(getAge() > MAX_AGE) {
-            setDead();
-        }
-    }
-    */
-    
-    /**
-     * Make this tuna more hungry. This could result in the tuna's death.
-     */
+     * Torne este atum mais faminto. Isso pode resultar na morte do atum.
+     */
     private void incrementHunger()
     {
     	setFoodLevel(getFoodLevel()-1);
@@ -96,10 +82,10 @@ public class Tuna extends Fish{
     }
     
     /**
-     * Tell the tuna to look for sardines adjacent to its current location.
-     * Only the first live sardine is eaten.
-     * @param location Where in the field it is located.
-     * @return Where food was found, or null if it wasn't.
+     * Diz ao atum para procurar por sardinhas adjacentes à sua localização atual.
+     * Só a primeira sardinha viva é comida.
+     * @param location Onde está localizado no campo
+     * @return Onde a comida foi encontrada, ou null, se não foi.
      */
     private Location findFood(Location location)
     {
@@ -122,14 +108,12 @@ public class Tuna extends Fish{
     }
     
     /**
-     * Check whether or not this tuna is to give birth at this step.
-     * New births will be made into free adjacent locations.
-     * @param newTunas A list to add newly born foxes to.
+     * Verifique se este atum deve ou ter filho neste passo.
+     * Novos nascimentos serão feitos em locais adjacentes livres.
+     * @param newTunas Uma lista para adicionar atuns recém-nascidas.
      */
     private void giveBirth(List<Actor> newTunas)
     {
-        // New tunas are born into adjacent locations.
-        // Get a list of adjacent free locations.
         List<Location> free = getField().getFreeAdjacentLocations(getLocation());
         int births = breed();
         for(int b = 0; b < births && free.size() > 0; b++) {
@@ -140,10 +124,9 @@ public class Tuna extends Fish{
     }
         
     /**
-     * Generate a number representing the number of births,
-     * if it can breed.
-     * @return The number of births (may be zero).
-     */
+     * Gera um número representando o número de nascimentos, se pode se reproduzir.
+     * @return O número de nascimentos.
+     */
     private int breed()
     {
         int births = 0;
@@ -154,23 +137,17 @@ public class Tuna extends Fish{
     }
 
     /**
-     * A tuna can breed if it has reached the breeding age.
+     * Retorna a idade de reprodução
+     * @return a idade de reprodução
      */
-    /*
-    private boolean canBreed()
-    {
-        return getAge() >= BREEDING_AGE;
-    }
-	*/
-    /**
-     * Indicate that the tuna is no longer alive.
-     * It is removed from the field.
-     */
-    
     public int getBreedingAge() {
     	return BREEDING_AGE;
     }
     
+    /**
+     * Retorna a idade maxima
+     * @return a idade maxima
+     */
     public int getMaxAge() {
     	return MAX_AGE;
     }

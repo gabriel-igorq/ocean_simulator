@@ -13,17 +13,14 @@ public class Simulator{
     private Ocean ocean;
     private int step;
     private SimulatorView simView;
-
-    // List of animals in the field.
     private List<Actor> animals;
-   // private double rands;
     private static final double SARDINE_CREATION_PROBABILITY = 0.035;    
     private static final double TUNAS_CREATION_PROBABILITY = 0.06; 
     private static final double SHARK_CREATION_PROBABILITY = 0.09;
    
     public static void main(String[] args) {
         Simulator sim = new Simulator(100, 100);
-        sim.simulate(1000);
+        sim.simulate(100);
     }
        
     public Simulator(int height, int width){
