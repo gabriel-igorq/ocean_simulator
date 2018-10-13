@@ -17,9 +17,8 @@ public class Ocean
     private int height, width;
     // Matriz para armazenar peixes
     private Fish[][] field;
-    // Matriz para armazenar algas. Foi utilizado Object como tipo pois
-    // usar a classe Seaweed dificultava a execução da simulação.
-    private Object[][] seaweeds;
+    // Matriz para armazenar algas
+    private Seaweed[][] seaweeds;
     
     /**
      * Cria um novo oceano
@@ -31,7 +30,7 @@ public class Ocean
     	this.height = height;
         this.width = width;
         field = new Fish[height][width];
-        seaweeds = new Object[height][width];
+        seaweeds = new Seaweed[height][width];
     }
     
     /**
@@ -79,7 +78,7 @@ public class Ocean
      * @param row Linha da matriz de algas.
      * @param col Coluna da matriz de algas.
      */
-    public void place(Object seaweed, int row, int col){
+    public void place(Seaweed seaweed, int row, int col){
     	place(seaweed, new Location(row,col));
     }
     
@@ -88,7 +87,7 @@ public class Ocean
      * @param seaweed Alga a ser posicionada.
      * @param location Localização onde se deve adicionar a alga
      */
-    public void place(Object seaweed, Location location){
+    public void place(Seaweed seaweed, Location location){
     	seaweeds[location.getRow()][location.getCol()] = seaweed;
     }
     
@@ -116,7 +115,7 @@ public class Ocean
      * @param location Localiação dada.
      * @return Alga na posição passada como parâmetro.
      */
-    public Object getSeaweedAt(Location location)
+    public Seaweed getSeaweedAt(Location location)
     {
         return getSeaweedAt(location.getRow(), location.getCol());
     }
@@ -127,7 +126,7 @@ public class Ocean
      * @param col Coluna da matriz de objetos de alga.
      * @return
      */
-    public Object getSeaweedAt(int row, int col)
+    public Seaweed getSeaweedAt(int row, int col)
     {
         return seaweeds[row][col];
     }
