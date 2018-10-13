@@ -6,23 +6,41 @@ import java.util.Random;
 
 
 /**
- * @author Gabriel Igor e Victor Hugo
+ * Simulador de oceano contendo sardinhas, atums e tubarões.
+ * Algas não são visíveis, mas também fazem parte do ecossistema.
+ * 
+ * @author Gabriel Igor Queiroz Costa, Victor Hugo Freire Ramalho
+ * @version 12/10/2018
  */
 
 public class Simulator{
+	//Oceano do simulador
     private Ocean ocean;
+    //Etapas da simulação
     private int step;
+    //Maneira de visuaizar a simulação
     private SimulatorView simView;
+
+    // Lista de animais
     private List<Actor> animals;
+    // Probabilidades de gerar cada tipo de peixe
     private static final double SARDINE_CREATION_PROBABILITY = 0.035;    
     private static final double TUNAS_CREATION_PROBABILITY = 0.06; 
     private static final double SHARK_CREATION_PROBABILITY = 0.09;
    
+    /**
+    * Função principal
+    */
     public static void main(String[] args) {
         Simulator sim = new Simulator(100, 100);
-        sim.simulate(100);
+        sim.simulate(1000);
     }
-       
+    
+    /**
+     * Construtor do simulador
+     * @param height altura da representação do oceano
+     * @param width largura da representação do oceano
+     */
     public Simulator(int height, int width){
 
     	animals = new ArrayList<Actor>();
@@ -37,6 +55,11 @@ public class Simulator{
         //simView.setColor(Seaweed.class, Color.green);
         reset();
     }
+    
+    /**
+     * Realiza apenas uma etapa da simulação.
+     * Cada actor realiza uma ação e as algas se expandem. 
+     */
     public void simulateOneStep(){
         step++;
         
@@ -56,22 +79,29 @@ public class Simulator{
         simView.showStatus(step, ocean);   
     }
     
+    /**
+     * Realiza a simulação
+     * @param numSteps Número de passos da simulação
+     */
     public void simulate(int numSteps){
         for(int step = 1; step <= numSteps && simView.isViable(ocean); step++) {
             simulateOneStep();
         }
     }
     
+    /**
+     * Reseta a simulação
+     */
     public void reset(){
         step = 0;
-       
         animals.clear();
         populate();
-    
-        // Show the starting state in the view.
         simView.showStatus(step, ocean);
     }
     
+    /**
+     * Função para preencher o oceano com peixes.
+     */
     private void populate(){
     	Random rand = Randomizer.getRandom();
         ocean.clear();
@@ -91,11 +121,14 @@ public class Simulator{
                 	 Shark shark = new Shark(true, ocean, location);
                 	 animals.add(shark);
                  }
-                // else leave the location empty.
             }
         }
     }
     
+    /**
+     * Executa determinada quantidade de passos da simulação.
+     * @param steps Número de passos.
+     */
     public void run(int steps)
     {
         simView.showStatus(0, ocean);
