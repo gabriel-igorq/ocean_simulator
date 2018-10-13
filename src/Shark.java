@@ -28,11 +28,11 @@ public class Shark extends Fish
     
 
     /**
-      * Cria um tubarão. Um tubarão pode ser criado como um recém nascido (idade zero
-      * e sem fome) ou com uma idade aleatória e nível de comida.
-      * @param randomAge Se verdadeiro, o tubarão terá idade e nível de fome aleatórios.
-      * @param field O campo atualmente ocupado.
-      * @param location A localização dentro do campo.
+     * Cria um tubarão. Um tubarão pode ser criado como um recém nascido (idade zero
+     * e sem fome) ou com uma idade aleatória e nível de comida.
+     * @param randomAge Se verdadeiro, o tubarão terá idade e nível de fome aleatórios.
+     * @param field O campo atualmente ocupado.
+     * @param location A localização dentro do campo.
      */
     public Shark(boolean randomAge, Ocean field, Location location)
     {
@@ -50,12 +50,12 @@ public class Shark extends Fish
     }
     
     /**
-    * Isto é o que os tubarões fazem a maior parte do tempo: eles caçam
-    * Comida. No processo, pode se reproduzir, morrer de fome,
-    * ou morrer de velhice.
-    * @param field O campo atualmente ocupado.
-    * @param newSharks Uma lista para adicionar tubarões recém-nascidos.
-    */
+     * Isto é o que os tubarões fazem a maior parte do tempo: eles caçam
+     * Comida. No processo, pode se reproduzir, morrer de fome,
+     * ou morrer de velhice.
+     * @param field O campo atualmente ocupado.
+     * @param newSharks Uma lista para adicionar tubarões recém-nascidos.
+     */
     public void act(List<Actor> newSharks)
     {
         incrementAge();
