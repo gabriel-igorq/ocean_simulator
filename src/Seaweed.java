@@ -3,12 +3,11 @@ import java.util.Random;
 
 /**
  * Uma classe que representa Algas.
- * Como não possui ações, não faz parte da interface Actor.
  * 
  * @author Gabriel Igor Queiroz Costa, Victor Hugo Freire Ramalho
  * @version 12/10/2018
  */
-public class Seaweed {
+public class Seaweed implements Actor {
 	
 	//Valor de 1 a 10 requisitado para a alga
 	private int value;
@@ -34,18 +33,32 @@ public class Seaweed {
 	}
 	
 	/**
-	 * Método de expansão da alga pelo oceano.
+	 * Método de ação da alga. Verifica se o valor da alga é maior que 5, caso seja
+	 * a alga irá se expandir.
 	 */
-	public void expanding() {
-		List<Location> adjacent = field.adjacentLocations(location);
-		Location newLocation = new Location(0,0);
-        if(adjacent.size() > 0) {
-        	newLocation = adjacent.get(0);
-        } else {
-        	newLocation  = null;
-        }
-		Seaweed seaweed = new Seaweed(field,newLocation);
-		field.place(seaweed, newLocation);
+	public void act(List<Actor> newSeaweeds) {
+		this.value = value;
+		for(int row = 0; row < field.getHeight(); row++) {
+            for(int col = 0; col < field.getWidth(); col++) {
+                Location location = new Location(row, col);
+                Seaweed seaweed = (Seaweed) field.getSeaweedAt(location);
+                if(seaweed != null) {
+                	//verifica se o valor é maior que 5 para se expandir
+            		if(value > 5) {
+            			List<Location> adjacent = field.adjacentLocations(location);
+            			Location newLocation = new Location(0,0);
+            	        if(adjacent.size() > 0) {
+            	        	newLocation = adjacent.get(0);
+            	        } else {
+            	        	newLocation  = null;
+            	        }
+            			Seaweed newSeaweed = new Seaweed(field,newLocation);
+            			field.place(newSeaweed, newLocation);
+            		}
+                }
+            }
+    	}
+		
 	}
 	
 	/**
@@ -55,19 +68,13 @@ public class Seaweed {
 		return this.alive;
 	}
 	
+	
 	/**
 	 * Faz com que a alga viva
 	 */
-	public void setIsAlive() {
-		alive = true;
-	}
-	
-	/**
-	 * Faz com que a alga morra
-	 */
-	public void dead() {
-		this.alive = false;
-	}
+	public void setIsAlive(boolean life) {
+		alive = life;
+	}	
 	
 	/**
 	 * Retorna valor da alga que vai de 1 a 10.
@@ -77,12 +84,5 @@ public class Seaweed {
 		return this.value;
 	}
 	
-	/**
-	 * Regenera a alga
-	 * @param value Novo valor que terá a alga, variando de 1 a 10
-	 */
-	public void heal(int value) {
-		this.value = value;
-	}
 
 }

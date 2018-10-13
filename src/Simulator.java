@@ -70,11 +70,10 @@ public class Simulator{
         for(Iterator<Actor> it = animals.iterator(); it.hasNext(); ) {
             Actor animal = it.next();
             animal.act(newAnimals);
-            if(! animal.isAlive()) {
+            if(! animal.isAlive()){
                 it.remove();
             }
         }
-        ocean.seaweedExpansion();
         animals.addAll(newAnimals);
         simView.showStatus(step, ocean);   
     }

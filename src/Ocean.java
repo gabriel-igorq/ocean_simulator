@@ -215,21 +215,5 @@ public class Ocean
         return width;
     }
     
-    /**
-     * Método para expandir as algas no oceano
-     */
-    public void seaweedExpansion() {
-        for(int row = 0; row < height; row++) {
-            for(int col = 0; col < width; col++) {
-                Location location = new Location(row, col);
-                Seaweed seaweed = (Seaweed) getSeaweedAt(location);
-                if(seaweed != null) {
-                    seaweed.heal(rand.nextInt(11));
-                    seaweed.expanding();
-                    seaweed.setIsAlive();
-                }
-            }
-    	}
-    }
-    
 }
+    
